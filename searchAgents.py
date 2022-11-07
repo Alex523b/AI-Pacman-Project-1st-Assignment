@@ -298,16 +298,13 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
         visitedCorners = [] # When starting, we have not visited any corner yet, thus the visited corners list is empty.
         return (self.startingPosition), tuple(visitedCorners)
-        util.raiseNotDefined()
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
         visitedCorners = state[1]
         for corner in self.corners:
             if(corner not in visitedCorners):# If any corner is not in the list of visited corners, we haven't reached the goal state yet.
@@ -334,17 +331,23 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
-        successors = []
+        x, y = state[0]
+        visitedCorners = state[1]
+        validSuccessors = []
+        cost = 1
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-               x,y = currentPosition
-               dx, dy = Actions.directionToVector(action)
-               nextx, nexty = int(x + dx), int(y + dy)
-               hitsWall = self.walls[nextx][nexty]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                visitedCornersOfNextState = list(visitedCorners)
+                nextPoint = (nextx, nexty)
+                if nextPoint in self.corners and nextPoint not in visitedCornersOfNextState: # Update visited corners of next state, in case we visit one that is unvisited
+                    visitedCornersOfNextState.append(nextPoint)
+                nextValidState = ((nextPoint, tuple(visitedCornersOfNextState)), action, cost)
+                validSuccessors.append(nextValidState)
         self._expanded += 1 # DO NOT CHANGE
-        return successors
+        return validSuccessors
 
     def getCostOfActions(self, actions):
         """
