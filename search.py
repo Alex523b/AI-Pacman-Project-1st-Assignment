@@ -73,20 +73,7 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem: SearchProblem):
-    """
-    Search the deepest nodes in the search tree first.
-
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    """
-    "*** YOUR CODE HERE ***"
+    """Search the deepest nodes in the search tree first."""
     frontier = util.Stack()
     frontier.push((problem.getStartState(), None, None)) # node representation: (state, parent state, action to get to state)
     expanded = {} # Expanded set representation: Basically, we use a dictionary with the current state being the key each time, and as a value we have a tuple (parent state, action to get to state)
@@ -118,7 +105,6 @@ def depthFirstSearch(problem: SearchProblem):
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
     frontier = util.Queue()
     frontier.push((problem.getStartState(), None, None)) # node representation: (state, parent state, action to get to state)
     expanded = {} # Expanded set representation: Basically, we use a dictionary with the current state being the key each time, and as a value we have a tuple (parent state, action to get to state)
@@ -150,7 +136,6 @@ def breadthFirstSearch(problem: SearchProblem):
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
     frontier = util.PriorityQueue()
     frontier.push((problem.getStartState(), None, None, 0), 0) # node representation: ((current node, path to node, parent node, cost to node), priority)
     expanded = {} # Expanded set representation: Once again, the current state is the dictionary key each time, with the cost to reach the particular state being the extra value
@@ -167,6 +152,8 @@ def uniformCostSearch(problem: SearchProblem):
                 else:
                     node = expanded.get(node[0])#Howerver, in the expanded set-dictionary this piece of information is stored as the first element
                 action = node[1]
+                if(action == None): # In case the Goal State is visited right after the starting state is expanded, do not append empty action
+                    break
                 li.append(action)
                 loopCounter += 1
             li.reverse()#Reverse the list, as we began storing the path to the goal state from finish to start
@@ -192,7 +179,6 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
     frontier = util.PriorityQueue()
     frontier.push((problem.getStartState(), None, None, 0), 0) # node representation: ((current node, path to node, parent node, cost to node), priority)
     expanded = {} # Expanded set representation: Once again, the current state is the dictionary key each time, with the cost to reach the particular state being the extra value
