@@ -87,6 +87,8 @@ def depthFirstSearch(problem: SearchProblem):
             while(node[0] is not None and node[0] != problem.getStartState()):
                 #Store actions until we reach the initial state
                 action = node[0]
+                if(action == None): # In case the Goal State is visited right after the starting state is expanded, do not append empty action
+                    break
                 li.append(action)
                 node = expanded.get(node[1])
             li.reverse()#Reverse the list, as we began storing the path to the goal state from finish to start
@@ -101,7 +103,6 @@ def depthFirstSearch(problem: SearchProblem):
                 action = child[1]
                 frontier.push((childNode, parentNode, action))    
     return []
-    util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
@@ -118,6 +119,8 @@ def breadthFirstSearch(problem: SearchProblem):
             while(node[0] is not None and node[0]!= problem.getStartState()):
                 #Store actions until we reach the initial state
                 action = node[0]
+                if(action == None): # In case the Goal State is visited right after the starting state is expanded, do not append empty action
+                    break
                 li.append(action)
                 node = expanded.get(node[1])
             li.reverse()#Reverse the list, as we began storing the path to the goal state from finish to start
@@ -132,7 +135,6 @@ def breadthFirstSearch(problem: SearchProblem):
                 action = child[1]
                 frontier.push((childNode, parentNode, action))
     return []
-    util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
@@ -168,8 +170,7 @@ def uniformCostSearch(problem: SearchProblem):
                 costToChild = child[2] + node[3] # Calculate the cost to reach the child state
                 action = child[1]
                 frontier.push((childNode, action, parentNode, costToChild), costToChild)
-    util.raiseNotDefined()
-
+    return []
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -195,6 +196,8 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 else:
                     node = expanded.get(node[0])#Howerver, in the expanded set-dictionary this piece of information is stored as the first element
                 action = node[1]
+                if(action == None): # In case the Goal State is visited right after the starting state is expanded, do not append empty action
+                    break
                 li.append(action)
                 loopCounter += 1
             li.reverse()#Reverse the list, as we began storing the path to the goal state from finish to start
@@ -210,7 +213,6 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 action = child[1]
                 frontier.push((childNode, action, parentNode, costToChild), heuristic(childNode, problem) + costToChild)
     return []
-    util.raiseNotDefined()
 
 
 # Abbreviations
