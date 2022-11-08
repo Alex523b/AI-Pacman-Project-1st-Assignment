@@ -310,7 +310,6 @@ class CornersProblem(search.SearchProblem):
             if(corner not in visitedCorners):# If any corner is not in the list of visited corners, we haven't reached the goal state yet.
                 return False
         return True
-        util.raiseNotDefined()
     def getActions(self, state):
         possible_directions = [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]
         valid_actions_from_state = []
@@ -363,7 +362,7 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-def cornersHeuristic(state: Any, problem: CornersProblem):
+def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
 
@@ -373,15 +372,34 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
       problem: The CornersProblem instance for this layout.
 
     This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e.  it should be
-    admissible (as well as consistent).
+    shortest path from the state to a goal of the problem; i.e., it should be
+    admissible.
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    heuristic = 0
+    prev_pos = state[0]
 
+    unvisited_corners = list(set(corners) - set(state[1]))
+
+    while unvisited_corners:
+        closest_corner = unvisited_corners[0]
+        closest_corner_distance = util.manhattanDistance(prev_pos, closest_corner)
+
+        for corner in unvisited_corners[1:]:
+            distance = util.manhattanDistance(prev_pos, corner)
+
+            if distance < closest_corner_distance:
+                closest_corner_distance = distance
+                closest_corner = corner
+        
+        heuristic += closest_corner_distance
+        unvisited_corners.remove(closest_corner)
+        prev_pos = closest_corner
+
+    return heuristic
+    
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
     def __init__(self):
