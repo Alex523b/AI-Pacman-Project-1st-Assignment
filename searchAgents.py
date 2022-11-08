@@ -307,7 +307,7 @@ class CornersProblem(search.SearchProblem):
         """
         visitedCorners = state[1]
         for corner in self.corners:
-            if(corner not in visitedCorners):# If any corner is not in the list of visited corners, we haven't reached the goal state yet.
+            if(corner not in visitedCorners):# If there is an unvisited corner, we have yet to reach the goal state.
                 return False
         return True
     def getActions(self, state):
@@ -361,7 +361,7 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
-def findCornersToBeVisited(visitedCorners: tuple, corners: tuple): # utility function for cornersHeuristics
+def findCornersToBeVisited(visitedCorners: tuple, corners: tuple): # Utility function for cornersHeuristics
     cornersToBeVisited = list(corners)
     for visitedCorner in visitedCorners:
         cornersToBeVisited.remove(visitedCorner)
