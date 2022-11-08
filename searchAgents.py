@@ -38,11 +38,11 @@ from typing import List, Tuple, Any
 from game import Directions
 from game import Agent
 from game import Actions
+from util import manhattanDistance # Needed for corners problem: heuristic
 import util
 import time
 import search
 import pacman
-
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
 
@@ -361,44 +361,35 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
+def findCornersToBeVisited(visitedCorners: tuple, corners: tuple): # utility function for cornersHeuristics
+    cornersToBeVisited = list(corners)
+    for visitedCorner in visitedCorners:
+        cornersToBeVisited.remove(visitedCorner)
+    return cornersToBeVisited
 
-def cornersHeuristic(state, problem):
-    """
-    A heuristic for the CornersProblem that you defined.
+def findClosestUnvisitedCorner(cornersToBeVisited: tuple, currentNode):
+        closestUnvisitedCorner = None
+        for corner in cornersToBeVisited:
+            distance = manhattanDistance(currentNode, corner)
+            if closestUnvisitedCorner == None or distance < closestUnvisitedCornerDistance:
+                closestUnvisitedCornerDistance = distance
+                closestUnvisitedCorner = corner
 
-      state:   The current search state
-               (a data structure you chose in your search problem)
+        return closestUnvisitedCorner, closestUnvisitedCornerDistance
 
-      problem: The CornersProblem instance for this layout.
+def cornersHeuristic(state: Any, problem: CornersProblem):
+    h = 0
+    currentNode = state[0]
+    cornersToBeVisited = findCornersToBeVisited(state[1], problem.corners)
+    while cornersToBeVisited != []:
+        closestUnvisitedCorner, closestUnvisitedCornerDistance = findClosestUnvisitedCorner(cornersToBeVisited, currentNode)
 
-    This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e., it should be
-    admissible.
-    """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
-    heuristic = 0
-    prev_pos = state[0]
-
-    unvisited_corners = list(set(corners) - set(state[1]))
-
-    while unvisited_corners:
-        closest_corner = unvisited_corners[0]
-        closest_corner_distance = util.manhattanDistance(prev_pos, closest_corner)
-
-        for corner in unvisited_corners[1:]:
-            distance = util.manhattanDistance(prev_pos, corner)
-
-            if distance < closest_corner_distance:
-                closest_corner_distance = distance
-                closest_corner = corner
+        currentNode = closestUnvisitedCorner
+        h += closestUnvisitedCornerDistance
         
-        heuristic += closest_corner_distance
-        unvisited_corners.remove(closest_corner)
-        prev_pos = closest_corner
+        cornersToBeVisited.remove(closestUnvisitedCorner)
 
-    return heuristic
+    return h
     
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
