@@ -459,7 +459,7 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     h = 0
     positionOfClosestDot, distanceToClosestDot  = findClosestDot(foodGrid.asList(), position)
     if positionOfClosestDot != None:
-        h += len(foodGrid.asList()) + distanceToClosestDot - 1 # Exclude the closest food that is going to be consumed
+        h += len(foodGrid.asList()) + mazeDistance(position, positionOfClosestDot, problem.startingGameState) - 1 # Exclude the closest food that is going to be consumed
     return h
 
 class ClosestDotSearchAgent(SearchAgent):
