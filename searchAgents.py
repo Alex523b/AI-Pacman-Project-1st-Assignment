@@ -310,6 +310,7 @@ class CornersProblem(search.SearchProblem):
             if(corner not in visitedCorners):# If there is an unvisited corner, we have yet to reach the goal state.
                 return False
         return True
+        
     def getActions(self, state):
         possible_directions = [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]
         valid_actions_from_state = []
@@ -320,6 +321,7 @@ class CornersProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 valid_actions_from_state.append(action)
         return valid_actions_from_state
+        
     def getSuccessors(self, state: Any):
         """
         Returns successor states, the actions they require, and a cost of 1.
@@ -368,15 +370,16 @@ def findCornersToBeVisited(visitedCorners: tuple, corners: tuple): # Utility fun
     return cornersToBeVisited
 
 def findClosestDot(dots: tuple, currentPosition): # Utility function for finding closest dot used by cornersHeuristic and foodHeuristic
-        positionOfClosestDot = None
-        distanceToClosestDot = None
-        for dot in dots:
-            distance = manhattanDistance(currentPosition, dot)
-            if positionOfClosestDot == None or distance < distanceToClosestDot:
-                distanceToClosestDot = distance
-                positionOfClosestDot = dot
+    positionOfClosestDot = None
+    distanceToClosestDot = None
+    for dot in dots:
+        distance = manhattanDistance(currentPosition, dot)
+        
+        if positionOfClosestDot == None or distance < distanceToClosestDot:
+            distanceToClosestDot = distance
+            positionOfClosestDot = dot
 
-        return positionOfClosestDot, distanceToClosestDot
+    return positionOfClosestDot, distanceToClosestDot
 
 def cornersHeuristic(state: Any, problem: CornersProblem):
     h = 0
